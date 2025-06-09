@@ -135,8 +135,10 @@
     new THREE.MeshLambertMaterial({ color: 0x888888 })
   );
   sword.position.set(0.3, -0.3, -1);
-  camera.add(sword);
-  scene.add(camera);
+
+  // Correct way: add sword to controls object
+  controls.getObject().add(sword);
+  scene.add(controls.getObject());
 
   // Animate
   const clock = new THREE.Clock();
