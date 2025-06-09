@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Minimalist FPS Game - Fixed Version</title>
+  <title>Minimalist FPS Game - FINAL WORKING VERSION</title>
   <style>
     body { margin: 0; overflow: hidden; }
     canvas { display: block; }
@@ -13,6 +13,7 @@
       color: white;
       padding: 10px;
       font-family: monospace;
+      z-index: 10;
     }
     #instructions {
       position: absolute;
@@ -25,6 +26,7 @@
       text-align: center;
       font-family: monospace;
       cursor: pointer;
+      z-index: 10;
     }
   </style>
 </head>
@@ -136,7 +138,6 @@
   );
   sword.position.set(0.3, -0.3, -1);
 
-  // Correct way: add sword to controls object
   controls.getObject().add(sword);
   scene.add(controls.getObject());
 
@@ -144,24 +145,27 @@
   const clock = new THREE.Clock();
   let velocity = new THREE.Vector3();
   let direction = new THREE.Vector3();
+  const speed = 5.0; // walking speed
 
   function animate() {
     requestAnimationFrame(animate);
 
     const delta = clock.getDelta();
 
-    velocity.x -= velocity.x * 10.0 * delta;
-    velocity.z -= velocity.z * 10.0 * delta;
-
     direction.z = Number(keys['KeyW']) - Number(keys['KeyS']);
     direction.x = Number(keys['KeyD']) - Number(keys['KeyA']);
     direction.normalize();
 
-    if (keys['KeyW'] || keys['KeyS']) velocity.z -= direction.z * 400.0 * delta;
-    if (keys['KeyA'] || keys['KeyD']) velocity.x -= direction.x * 400.0 * delta;
-
-    controls.moveRight(-velocity.x * delta);
-    controls.moveForward(-velocity.z * delta);
+    if (controls.isLocked === true) {
+      if (keys['KeyW'] || keys['KeyS']) {
+        controls.getObject().position.x -= direction.z * Math.sin(camera.rotation.y) * speed * delta;
+        controls.getObject().position.z -= direction.z * Math.cos(camera.rotation.y) * speed * delta;
+      }
+      if (keys['KeyA'] || keys['KeyD']) {
+        controls.getObject().position.x -= direction.x * Math.cos(camera.rotation.y) * speed * delta;
+        controls.getObject().position.z += direction.x * Math.sin(camera.rotation.y) * speed * delta;
+      }
+    }
 
     renderer.render(scene, camera);
   }
