@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Basic FPS - Flat Terrain</title>
+  <title>Basic FPS - Fixed Flat Terrain</title>
   <style>
     html, body {
       margin: 0;
@@ -60,7 +60,7 @@
       }
     });
 
-    // Mouse look
+    // Mouse look (left/right only)
     document.addEventListener('mousemove', e => {
       if (document.pointerLockElement === canvas) {
         angle -= e.movementX * 0.002;
@@ -87,20 +87,24 @@
       // Clear canvas
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Draw ground
-      ctx.fillStyle = '#228B22'; // green
+      // Draw sky (top half)
+      ctx.fillStyle = '#87CEEB';
+      ctx.fillRect(0, 0, canvas.width, canvas.height / 2);
+
+      // Draw ground (bottom half)
+      ctx.fillStyle = '#228B22';
       ctx.fillRect(0, canvas.height / 2, canvas.width, canvas.height / 2);
 
-      // Draw border (simple rectangle to simulate border)
+      // Draw border (simple fixed rectangle)
       ctx.strokeStyle = '#444';
-      ctx.lineWidth = 10;
-      ctx.strokeRect(50, canvas.height / 2 + 50, canvas.width - 100, canvas.height / 2 - 100);
+      ctx.lineWidth = 6;
+      ctx.strokeRect(100, canvas.height / 2 + 100, canvas.width - 200, canvas.height / 2 - 200);
 
-      // Draw clouds
-      drawCloud(100, 100);
-      drawCloud(300, 150);
-      drawCloud(600, 80);
-      drawCloud(900, 130);
+      // Draw clouds (fixed positions)
+      drawCloud(200, 100);
+      drawCloud(500, 80);
+      drawCloud(800, 120);
+      drawCloud(1100, 90);
 
       requestAnimationFrame(gameLoop);
     }
